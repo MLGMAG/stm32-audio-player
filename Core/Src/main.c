@@ -44,6 +44,8 @@
 /* Private variables ---------------------------------------------------------*/
 I2C_HandleTypeDef hi2c1;
 
+I2S_HandleTypeDef hi2s1;
+
 SPI_HandleTypeDef hspi2;
 
 /* Definitions for defaultTask */
@@ -54,6 +56,7 @@ const osThreadAttr_t defaultTask_attributes = {
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* USER CODE BEGIN PV */
+osSemaphoreId_t PLAYER_SEMAPHORE_ID;
 
 /* USER CODE END PV */
 
@@ -62,6 +65,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_SPI2_Init(void);
+static void MX_I2S1_Init(void);
 void StartDefaultTask(void *argument);
 
 /* USER CODE BEGIN PFP */
@@ -105,6 +109,7 @@ int main(void)
   MX_I2C1_Init();
   MX_FATFS_Init();
   MX_SPI2_Init();
+  MX_I2S1_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -117,6 +122,7 @@ int main(void)
   /* USER CODE END RTOS_MUTEX */
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
+  PLAYER_SEMAPHORE_ID = osSemaphoreNew(1U, 0U, NULL);
   /* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
 
@@ -237,6 +243,40 @@ static void MX_I2C1_Init(void)
 }
 
 /**
+  * @brief I2S1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_I2S1_Init(void)
+{
+
+  /* USER CODE BEGIN I2S1_Init 0 */
+
+  /* USER CODE END I2S1_Init 0 */
+
+  /* USER CODE BEGIN I2S1_Init 1 */
+
+  /* USER CODE END I2S1_Init 1 */
+  hi2s1.Instance = SPI1;
+  hi2s1.Init.Mode = I2S_MODE_MASTER_TX;
+  hi2s1.Init.Standard = I2S_STANDARD_PHILIPS;
+  hi2s1.Init.DataFormat = I2S_DATAFORMAT_16B;
+  hi2s1.Init.MCLKOutput = I2S_MCLKOUTPUT_DISABLE;
+  hi2s1.Init.AudioFreq = I2S_AUDIOFREQ_44K;
+  hi2s1.Init.CPOL = I2S_CPOL_LOW;
+  hi2s1.Init.ClockSource = I2S_CLOCK_PLL;
+  hi2s1.Init.FullDuplexMode = I2S_FULLDUPLEXMODE_DISABLE;
+  if (HAL_I2S_Init(&hi2s1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN I2S1_Init 2 */
+
+  /* USER CODE END I2S1_Init 2 */
+
+}
+
+/**
   * @brief SPI2 Initialization Function
   * @param None
   * @retval None
@@ -287,6 +327,7 @@ static void MX_GPIO_Init(void)
   /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
