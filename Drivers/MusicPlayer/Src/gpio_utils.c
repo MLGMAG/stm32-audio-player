@@ -3,7 +3,7 @@
 #include "cmsis_os.h"
 
 extern osSemaphoreId_t BUTTON_SEMAPHORE_ID;
-uint8_t disable_button_isr = 0;
+extern uint8_t disable_button_isr;
 
 static GPIO_TypeDef *GPIO_PORT = GPIOB;
 static uint16_t GPIO_PIN = GPIO_PIN_12;

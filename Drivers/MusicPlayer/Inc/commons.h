@@ -13,6 +13,10 @@ typedef enum {
 	UAL_STATUS_OK, UAL_STATUS_ERROR,
 } UAL_STATUS_t;
 
+typedef enum {
+	UAL_MANAGER_MSG_TYPE_BUTTON_PRESS, UAL_MANAGER_MSG_TYPE_TRACK_FINISH
+} UAL_MANAGER_MSG_TYPE_t;
+
 typedef struct {
 	uint64_t data_section_pointer;
 	uint32_t file_size;
@@ -30,6 +34,16 @@ typedef struct {
 	char filename[UAL_TRACK_FILENAME_MAX_LEN];
 	WAV_FILE_METADATA_t metadata;
 } UAL_TRACK_t;
+
+typedef struct {
+	char path[UAL_TRACK_PATH_MAX_LEN];
+	uint64_t data_section_pointer;
+	uint32_t file_size;
+} UAL_TRACK_MSG_t;
+
+typedef struct {
+	UAL_MANAGER_MSG_TYPE_t type;
+} UAL_MANAGER_MSG_t;
 
 void UAL_Error_Handler(void);
 

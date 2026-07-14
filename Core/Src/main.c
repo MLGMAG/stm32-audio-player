@@ -23,7 +23,10 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "commons.h"
+#include "button_task.h"
+#include "player_task.h"
+#include "manager_task.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,17 +51,32 @@ I2S_HandleTypeDef hi2s1;
 
 SPI_HandleTypeDef hspi2;
 
-/* Definitions for defaultTask */
-osThreadId_t defaultTaskHandle;
-const osThreadAttr_t defaultTask_attributes = {
-  .name = "defaultTask",
+/* Definitions for MANAGER_TASK */
+osThreadId_t MANAGER_TASKHandle;
+const osThreadAttr_t MANAGER_TASK_attributes = {
+  .name = "MANAGER_TASK",
+  .stack_size = 1024 * 4,
+  .priority = (osPriority_t) osPriorityHigh,
+};
+/* Definitions for PLAYER_TASK */
+osThreadId_t PLAYER_TASKHandle;
+const osThreadAttr_t PLAYER_TASK_attributes = {
+  .name = "PLAYER_TASK",
+  .stack_size = 512 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
+/* Definitions for BUTTON_TASK */
+osThreadId_t BUTTON_TASKHandle;
+const osThreadAttr_t BUTTON_TASK_attributes = {
+  .name = "BUTTON_TASK",
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* USER CODE BEGIN PV */
 osSemaphoreId_t PLAYER_SEMAPHORE_ID;
 osSemaphoreId_t BUTTON_SEMAPHORE_ID;
-
+osMessageQueueId_t PLAYER_QUEUE;
+osMessageQueueId_t MANAGER_QUEUE;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -67,7 +85,9 @@ static void MX_GPIO_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_SPI2_Init(void);
 static void MX_I2S1_Init(void);
-void StartDefaultTask(void *argument);
+void MANAGER_TASK_Start(void *argument);
+void PLAYER_TASK_Start(void *argument);
+void BUTTON_TASK_Start(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -133,12 +153,19 @@ int main(void)
   /* USER CODE END RTOS_TIMERS */
 
   /* USER CODE BEGIN RTOS_QUEUES */
-  /* add queues, ... */
+  PLAYER_QUEUE = osMessageQueueNew(1, sizeof(UAL_TRACK_MSG_t), NULL);
+  MANAGER_QUEUE = osMessageQueueNew(8, sizeof(UAL_MANAGER_MSG_t), NULL);
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
-  /* creation of defaultTask */
-  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+  /* creation of MANAGER_TASK */
+  MANAGER_TASKHandle = osThreadNew(MANAGER_TASK_Start, NULL, &MANAGER_TASK_attributes);
+
+  /* creation of PLAYER_TASK */
+  PLAYER_TASKHandle = osThreadNew(PLAYER_TASK_Start, NULL, &PLAYER_TASK_attributes);
+
+  /* creation of BUTTON_TASK */
+  BUTTON_TASKHandle = osThreadNew(BUTTON_TASK_Start, NULL, &BUTTON_TASK_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -361,22 +388,49 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE END 4 */
 
-/* USER CODE BEGIN Header_StartDefaultTask */
+/* USER CODE BEGIN Header_MANAGER_TASK_Start */
 /**
-  * @brief  Function implementing the defaultTask thread.
+  * @brief  Function implementing the MANAGER_TASK thread.
   * @param  argument: Not used
   * @retval None
   */
-/* USER CODE END Header_StartDefaultTask */
-void StartDefaultTask(void *argument)
+/* USER CODE END Header_MANAGER_TASK_Start */
+void MANAGER_TASK_Start(void *argument)
 {
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
+  UAL_MANAGER_TASK_Start(argument);
   /* USER CODE END 5 */
+}
+
+/* USER CODE BEGIN Header_PLAYER_TASK_Start */
+/**
+* @brief Function implementing the PLAYER_TASK thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_PLAYER_TASK_Start */
+void PLAYER_TASK_Start(void *argument)
+{
+  /* USER CODE BEGIN PLAYER_TASK_Start */
+  /* Infinite loop */
+  UAL_PLAYER_TASK_Start(argument);
+  /* USER CODE END PLAYER_TASK_Start */
+}
+
+/* USER CODE BEGIN Header_BUTTON_TASK_Start */
+/**
+* @brief Function implementing the BUTTON_TASK thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_BUTTON_TASK_Start */
+void BUTTON_TASK_Start(void *argument)
+{
+  /* USER CODE BEGIN BUTTON_TASK_Start */
+  /* Infinite loop */
+  UAL_BUTTON_TASK_Start(argument);
+  /* USER CODE END BUTTON_TASK_Start */
 }
 
 /**
