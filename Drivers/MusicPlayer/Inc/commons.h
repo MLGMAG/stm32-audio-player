@@ -3,6 +3,12 @@
 
 #include "stdint.h"
 
+#define UAL_TRACK_PATH_MAX_LEN 128
+#define UAL_TRACK_FILENAME_MAX_LEN 64
+
+#define UAL_DISPLAY_PLAYLIST_TITLE  "      PLAYLIST      "
+#define UAL_DISPLAY_NO_TRACKS "       (empty)      "
+
 typedef enum {
 	UAL_STATUS_OK, UAL_STATUS_ERROR,
 } UAL_STATUS_t;
@@ -18,6 +24,12 @@ typedef struct {
 	uint16_t bytes_per_sample;
 	uint16_t bits_per_sample_per_channel;
 } WAV_FILE_METADATA_t;
+
+typedef struct {
+	char path[UAL_TRACK_PATH_MAX_LEN];
+	char filename[UAL_TRACK_FILENAME_MAX_LEN];
+	WAV_FILE_METADATA_t metadata;
+} UAL_TRACK_t;
 
 void UAL_Error_Handler(void);
 
