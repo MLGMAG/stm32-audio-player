@@ -1,6 +1,8 @@
 # STM32 Audio Player
 
-A WAV file audio player for the STM32F411CEU6 microcontroller. Reads tracks from an SD card, streams them over I2S, and shows the playlist on an SSD1306 OLED display. Built on FreeRTOS.
+A WAV file audio player for the STM32F411CEU6 microcontroller. Reads tracks from an SD card, streams them over I2S, and shows the playlist on an SSD1306 OLED display. Built on FreeRTOS. 
+
+Check [video](https://www.youtube.com/watch?v=Vr9HyNxAOrs&pp=0gcJCaMLAYcqIYzv) to see how it works.
 
 ## Features
 
