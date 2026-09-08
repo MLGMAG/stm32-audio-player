@@ -66,6 +66,10 @@ The project can also be built and flashed directly from STM32CubeIDE using the `
 
 ## Architecture
 
+General hardware architecture:
+
+![Architecture](schematic/architecture.jpg)
+
 The application runs three FreeRTOS tasks:
 
 ```
