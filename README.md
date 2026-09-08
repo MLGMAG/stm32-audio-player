@@ -4,6 +4,8 @@ A WAV file audio player for the STM32F411CEU6 microcontroller. Reads tracks from
 
 Check [video](https://www.youtube.com/watch?v=Vr9HyNxAOrs&pp=0gcJCaMLAYcqIYzv) to see how it works.
 
+More technical docs / schemas available in `schematic` directory. 
+
 ![Prototype](schematic/prototype.jpg)
 
 ## Features
